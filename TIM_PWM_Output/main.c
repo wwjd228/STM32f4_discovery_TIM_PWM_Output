@@ -62,34 +62,16 @@ int main(void)
   
   while(1)  // Do not exit
   {
-  
-    if(brightness + n <= 0)
-        who_run = (who_run + 1) % 4; 
+  	
+    TIM4->CCR1 = 504 ; // duty cycle = 30%
+	for(i=0;i<10000;i++); // delay
+    TIM4->CCR2 = 840; // duty cycle = 50%
+	for(i=0;i<10000;i++); // delay
+    TIM4->CCR3 = 1176; // duty cycle = 70%
+	for(i=0;i<10000;i++); // delay
+    TIM4->CCR4 = 1512; // duty cycle = 90%
+    
 
-    if (((brightness + n) >= 3000) || ((brightness + n) <= 0))
-      n = -n; // if  brightness maximum/maximum change direction
-    
-    brightness += n;
-    // TIM4->CCR1 = brightness - 1;
-    // TIM4->CCR2 = brightness - 1;
-    // TIM4->CCR3 = brightness - 1;
-    // TIM4->CCR4 = brightness - 1;
-    
-    //Light LEDs in turn
-    switch(who_run){
-        case 0:
-            TIM4->CCR1 = brightness - 1; // set brightness
-            break;
-        case 1:
-            TIM4->CCR2 = brightness - 1; // set brightness
-            break;
-        case 2:
-            TIM4->CCR3 = brightness - 1; // set brightness
-            break;
-        case 3:
-            TIM4->CCR4 = brightness - 1; // set brightness
-            break;
-    }
     for(i=0;i<10000;i++);  // delay
   }
  
@@ -129,7 +111,7 @@ void GPIO_Configuration(void)
     GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_12 | GPIO_Pin_13| GPIO_Pin_14| GPIO_Pin_15; //PD12->LED3 PD13->LED4 PD14->LED5 PD15->LED6
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;            // Alt Function - Push Pull
     GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
     GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
     GPIO_Init( GPIOD, &GPIO_InitStructure );  
 }
@@ -144,13 +126,13 @@ void TIM_Configuration(void)
     TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
     TIM_OCInitTypeDef TIM_OCInitStruct;
 
-    // Let PWM frequency equal 100Hz.
-    // Let period equal 1000. Therefore, timer runs from zero to 1000. Gives 0.1Hz resolution.
-    // Solving for prescaler gives 240.
+    // Let PWM frequency equal 10kHz.
+    // Let period equal 1680. Therefore, timer runs from zero to 1680.
+    // Solving for prescaler gives 5.
     TIM_TimeBaseStructInit( &TIM_TimeBaseInitStruct );
     TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV4;
     TIM_TimeBaseInitStruct.TIM_Period = 1680 - 1;   
-    TIM_TimeBaseInitStruct.TIM_Prescaler = 500 - 1; 
+    TIM_TimeBaseInitStruct.TIM_Prescaler = 5 - 1; 
     TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Up;    
     TIM_TimeBaseInit( TIM4, &TIM_TimeBaseInitStruct );
     
@@ -160,7 +142,7 @@ void TIM_Configuration(void)
     
     // Initial duty cycle equals 0%. Value can range from zero to 65535.
     //TIM_Pulse = TIM4_CCR1 register (16 bits)
-    TIM_OCInitStruct.TIM_Pulse = 65535; //(0=Always Off, 65535=Always On)
+    TIM_OCInitStruct.TIM_Pulse = 16800; //(0=Always Off, 65535=Always On)
  
     TIM_OC1Init( TIM4, &TIM_OCInitStruct ); // Channel 1  LED
     TIM_OC2Init( TIM4, &TIM_OCInitStruct ); // Channel 2  LED
