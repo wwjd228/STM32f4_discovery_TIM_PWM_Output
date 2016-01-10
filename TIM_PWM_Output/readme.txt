@@ -70,10 +70,10 @@ The PWM waveform can be displayed using an oscilloscope.
   - STM32F4-Discovery
     - Connect the following pins to an oscilloscope to monitor the different 
       waveforms:
-        - PC.06: (TIM3_CH1)
-        - PC.07: (TIM3_CH2)
-        - PB.00: (TIM3_CH3)
-        - PB.01: (TIM3_CH4)  
+        - PD12: (TIM4_CH1)
+        - PD13: (TIM4_CH2)
+        - PD14: (TIM4_CH3)
+        - PD15: (TIM4_CH4)  
 
 @par How to use it ? 
 
