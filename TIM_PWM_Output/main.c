@@ -52,6 +52,7 @@ int main(void)
 {
   volatile int i;
   int n = 1;
+  int count = 0;
   uint16_t brightness = 0;      
   uint16_t who_run = 1;
 
@@ -59,25 +60,40 @@ int main(void)
   TIM_Configuration();
   GPIO_Configuration();
 
-  
+
   while(1)  // Do not exit
   {
-  	
-    TIM4->CCR1 = 504 ; // duty cycle = 30%
-	for(i=0;i<10000;i++); // delay
-    TIM4->CCR2 = 840; // duty cycle = 50%
-	for(i=0;i<10000;i++); // delay
-    TIM4->CCR3 = 1176; // duty cycle = 70%
-	for(i=0;i<10000;i++); // delay
-    TIM4->CCR4 = 1512; // duty cycle = 90%
-    
+    if ( count < 1 ) {
+        count++;
+        TIM4->CCR4 = 840; // duty cycle = 50%
+          for(i=0;i<500;i++);
+        TIM4->CCR4 = 1176; // duty cycle = 70%
+	  for(i=0;i<1000;i++); // delay
+        TIM4->CCR4 = 1512; // duty cycle = 90%
+          for(i=0;i<50000000;i++); 
+    }
 
-    for(i=0;i<10000;i++);  // delay
+    else {
+      TIM4->CCR1 = 504; // duty cycle = 30%
+	  for(i=0;i<10000;i++); // delay
+      TIM4->CCR4 = 1512; // duty cycle = 90%
+	  for(i=0;i<10000;i++); // delay
+
+      // 84 left, 126 middle, 168 right
+      TIM3->CCR1 = 84; // duty cycle = 5%
+  	  for(i=0;i<150000000;i++); // delay
+//      TIM3->CCR1 = 126; // duty cycle = 7.5%
+//	  for(i=0;i<50000000;i++); // delay
+      TIM3->CCR1 = 168; // duty cycle = 10%
+	  for(i=0;i<50000000;i++); // delay
+//      TIM3->CCR1 = 126; // duty cycle = 7.5%
+//	  for(i=0;i<50000000;i++); // delay
+    }
+
   }
  
   return(0); // System will implode
-}   
-  
+}  
   
 
 /**
